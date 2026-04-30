@@ -1,0 +1,54 @@
+START
+
+LOAD flower data from flowers.txt
+FOR each flower
+    store name, description, image file
+    set waterCount = 0
+    set maxWater = 3   // number of times you must water
+    set visible = false
+END FOR
+
+CREATE main window
+CREATE left panel for flower list
+CREATE center panel for garden area
+CREATE right panel for bouquet canvas
+CREATE buttons: Water, Add to Bouquet
+CREATE info area for flower description
+
+DISPLAY all flowers in the left panel
+FOR each flower
+    show flower name
+    show flower description
+    start as invisible (no flower drawn yet)
+    create Water button for that flower
+END FOR
+
+WHILE game is running
+    WAIT FOR USER ACTION
+
+    IF user clicks Water button for a flower
+        increase waterCount of that flower by 1
+        IF waterCount >= maxWater
+            set flower.visible = true
+            SHOW the full flower image in the garden panel
+            ENABLE Add to Bouquet button for that flower
+        END IF
+        redraw the flower area (still hidden until fully grown)
+    END IF
+
+    IF user clicks Add to Bouquet button for a fully grown flower
+        add flower image to bouquet canvas
+        show flower name and description in info area
+        PLACE flower in a spot on the bouquet panel
+    END IF
+
+    IF user clicks Clear Bouquet
+        remove all flowers from bouquet canvas
+    END IF
+
+    IF user clicks Save Bouquet
+        save bouquet design (e.g., to a file)
+    END IF
+END WHILE
+
+END
