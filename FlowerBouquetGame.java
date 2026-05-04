@@ -224,11 +224,11 @@ public class FlowerBouquetGame extends JFrame {
     y = coverY - 10;
     angle = 0.08;
 } else if (f.name.equals("Yarrow")) {
-    x = centerX - 5;
+    x = centerX - 130;
     y = coverY + 55;
     angle = 0.15;
 } else if (f.name.equals("Chuparosa")) {
-    x = centerX + 1;
+    x = centerX - 10;
     y = coverY + 20;
     angle = 0.15;
 }
