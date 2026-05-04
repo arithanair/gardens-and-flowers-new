@@ -108,21 +108,13 @@ public class FlowerBouquetGame extends JFrame {
     }
 
     private String getBouquetImageName(String normalImage) {
-        if (normalImage.equals("poppy.jpeg")) {
-            return "poppy-removebg-preview.png";
-        } else if (normalImage.equals("yarrow.jpeg")) {
-            return "yarrow-removebg-preview.png";
-        } else if (normalImage.equals("sunflower.jpeg")) {
-            return "sunflower-removebg-preview.png";
-        } else if (normalImage.equals("blueFlax.jpeg")) {
-            return "blueFlax-removebg-preview.png";
-        } else if (normalImage.equals("chuparosa.jpeg") || normalImage.equals("chaparosa.jpeg")) {
-            return "chaparosa-removebg-preview.png";
-        } else if (normalImage.equals("arroyoLupine.jpeg")) {
-            return "arroyoLupine-removebg-preview.png";
-        } else if (normalImage.equals("winecupClarkia.jpeg") || normalImage.equals("winecupClarika.jpeg")) {
-            return "winecupClarika-removebg-preview.png";
-        }
+        if (normalImage.equals("poppy.jpeg")) return "poppy-removebg-preview.png";
+        if (normalImage.equals("yarrow.jpeg")) return "yarrow-removebg-preview.png";
+        if (normalImage.equals("sunflower.jpeg")) return "sunflower-removebg-preview.png";
+        if (normalImage.equals("blueFlax.jpeg")) return "blueFlax-removebg-preview.png";
+        if (normalImage.equals("chuparosa.jpeg") || normalImage.equals("chaparosa.jpeg")) return "chaparosa-removebg-preview.png";
+        if (normalImage.equals("arroyoLupine.jpeg")) return "arroyoLupine-removebg-preview.png";
+        if (normalImage.equals("winecupClarkia.jpeg") || normalImage.equals("winecupClarika.jpeg")) return "winecupClarika-removebg-preview.png";
 
         return normalImage;
     }
@@ -191,54 +183,67 @@ public class FlowerBouquetGame extends JFrame {
             int panelW = getWidth();
             int centerX = panelW / 2;
 
-            int coverW = 280;
-            int coverH = 350;
+            int coverW = 330;
+            int coverH = 410;
             int coverX = centerX - coverW / 2;
-            int coverY = 135;
+            int coverY = 125;
 
-            int flowerSize = 175;
+            int flowerSize = 260;
 
-            int[][] spots = {
-                {centerX - 95, coverY + 25},   // 1
-                {centerX - 50, coverY + 5},    // 2
-                {centerX - 10, coverY + 20},   // 3
-            
-                {centerX + 55, coverY + 10},   // 4 
-                {centerX + 35, coverY + 10},   // 5
-            
-                {centerX - 30, coverY + 55},   // 6
-            
-                {centerX - 35, coverY + 5}     // 7 
-            };
-            double[] angles = {
-                    -0.35, -0.18, -0.05, 0.20, -0.25, 0.08, 0.25
-            };
-
-         
             g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
 
-           
-            for (int i = 0; i < bouquetFlowers.size() && i < spots.length; i++) {
-                Flower f = bouquetFlowers.get(i);
+            Shape oldClip = g2.getClip();
+            g2.setClip(coverX + 10, coverY - 45, coverW - 20, 265);
+
+            for (Flower f : bouquetFlowers) {
                 ImageIcon icon = new ImageIcon(f.bouquetImagePath);
 
                 if (icon.getIconWidth() > 0) {
-                    int x = spots[i][0];
-                    int y = spots[i][1];
+                    int x = centerX - flowerSize / 2;
+                    int y = coverY + 20;
+                    double angle = 0;
+
+                   if (f.name.equals("California Poppy")) {
+    x = centerX - 105;
+    y = coverY + 55;
+    angle = -0.20;
+} else if (f.name.equals("Sunflower")) {
+    x = centerX - 45;
+    y = coverY + 50;
+    angle = 0.05;
+} else if (f.name.equals("Arroyo Lupine")) {
+    x = centerX - 5;
+    y = coverY + 45;
+    angle = 0.12;
+} else if (f.name.equals("Blue Flax")) {
+    x = centerX - 100;
+    y = coverY + 10;
+    angle = -0.12;
+} else if (f.name.equals("Winecup Clarkia")) {
+    x = centerX - 35;
+    y = coverY - 10;
+    angle = 0.08;
+} else if (f.name.equals("Yarrow")) {
+    x = centerX + 10;
+    y = coverY + 55;
+    angle = 0.15;
+} else if (f.name.equals("Chuparosa")) {
+    x = centerX + 15;
+    y = coverY + 20;
+    angle = 0.15;
+}
 
                     Graphics2D copy = (Graphics2D) g2.create();
-                    copy.rotate(angles[i], x + flowerSize / 2, y + flowerSize / 2);
+                    copy.rotate(angle, x + flowerSize / 2, y + flowerSize / 2);
                     copy.drawImage(icon.getImage(), x, y, flowerSize, flowerSize, this);
                     copy.dispose();
-                } else {
-                    g2.setColor(Color.RED);
-                    g2.drawString("Missing: " + f.bouquetImagePath, 20, 70 + i * 20);
                 }
             }
 
+            g2.setClip(oldClip);
+
            
-            Shape oldClip = g2.getClip();
-            g2.setClip(coverX, coverY + 205, coverW, coverH - 205);
+            g2.setClip(coverX, coverY + 175, coverW, coverH - 175);
             g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
             g2.setClip(oldClip);
 
