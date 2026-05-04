@@ -196,16 +196,16 @@ public class FlowerBouquetGame extends JFrame {
             int coverX = centerX - coverW / 2;
             int coverY = 135;
 
-            int flowerSize = 170;
+            int flowerSize = 175;
 
             int[][] spots = {
-                {centerX - 120, coverY + 25},
-                {centerX - 65,  coverY + 0},
-                {centerX - 10,  coverY + 15},
-                {centerX + 45,  coverY + 5},
-                {centerX - 95,  coverY + 70},
-                {centerX - 35,  coverY + 60},
-                {centerX + 15,  coverY + 70}
+                {centerX - 95, coverY + 25},
+                {centerX - 50, coverY + 5},
+                {centerX - 10, coverY + 20},
+                {centerX + 35, coverY + 10},
+                {centerX - 75, coverY + 65},
+                {centerX - 30, coverY + 55},
+                {centerX + 10, coverY + 65}
             };
             double[] angles = {
                     -0.35, -0.18, -0.05, 0.20, -0.25, 0.08, 0.25
