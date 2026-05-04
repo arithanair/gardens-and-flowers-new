@@ -204,31 +204,31 @@ public class FlowerBouquetGame extends JFrame {
                     double angle = 0;
 
                    if (f.name.equals("California Poppy")) {
-    x = centerX - 105;
+    x = centerX - 120;
     y = coverY + 55;
     angle = -0.20;
 } else if (f.name.equals("Sunflower")) {
-    x = centerX - 45;
+    x = centerX - 60;
     y = coverY + 50;
     angle = 0.05;
 } else if (f.name.equals("Arroyo Lupine")) {
-    x = centerX - 5;
+    x = centerX - 20;
     y = coverY + 45;
     angle = 0.12;
 } else if (f.name.equals("Blue Flax")) {
-    x = centerX - 100;
+    x = centerX - 115;
     y = coverY + 10;
     angle = -0.12;
 } else if (f.name.equals("Winecup Clarkia")) {
-    x = centerX - 35;
+    x = centerX - 50;
     y = coverY - 10;
     angle = 0.08;
 } else if (f.name.equals("Yarrow")) {
-    x = centerX + 10;
+    x = centerX - 5;
     y = coverY + 55;
     angle = 0.15;
 } else if (f.name.equals("Chuparosa")) {
-    x = centerX + 15;
+    x = centerX + 1;
     y = coverY + 20;
     angle = 0.15;
 }
