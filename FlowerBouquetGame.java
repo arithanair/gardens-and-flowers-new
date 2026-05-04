@@ -1,71 +1,69 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class FlowerBouquetGame extends JFrame {
+
     private JPanel leftPanel, rightPanel;
-    private JLabel gardenLabel, infoLabel;
-    private JButton addButton;
-    private DefaultListModel<String> bouquetModel;
-    private JList<String> bouquetList;
-    
+    private JLabel infoLabel, flowerImageLabel;
+    private JButton addButton, clearButton;
+
     private ArrayList<Flower> flowers = new ArrayList<>();
+    private ArrayList<Flower> bouquetFlowers = new ArrayList<>();
+
     private Flower selectedFlower = null;
+    private BouquetPanel bouquetPanel;
 
     public FlowerBouquetGame() {
         setTitle("Wildflower Bouquet Builder");
-        setSize(900, 700);
+        setSize(1100, 700);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout(10, 10));
 
         loadFlowerData();
 
-        // --- LEFT PANEL: Garden and Info ---
         leftPanel = new JPanel();
         leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
-        leftPanel.setPreferredSize(new Dimension(500, 700));
+        leftPanel.setPreferredSize(new Dimension(420, 700));
 
-        // Garden Image
-        ImageIcon gardenIcon = new ImageIcon("garden.png");
-        // Scale image if it exists
-        if (gardenIcon.getIconWidth() > 0) {
-            Image img = gardenIcon.getImage().getScaledInstance(500, 400, Image.SCALE_SMOOTH);
-            gardenLabel = new JLabel(new ImageIcon(img));
-        } else {
-            gardenLabel = new JLabel("[ Garden Drawing Not Found ]");
-            gardenLabel.setPreferredSize(new Dimension(500, 400));
-            gardenLabel.setOpaque(true);
-            gardenLabel.setBackground(Color.LIGHT_GRAY);
-        }
-        gardenLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        leftPanel.add(gardenLabel);
+        flowerImageLabel = new JLabel("Select a flower to see its picture.");
+        flowerImageLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        flowerImageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        flowerImageLabel.setPreferredSize(new Dimension(350, 280));
+        leftPanel.add(flowerImageLabel);
 
-        // Information Text
-        infoLabel = new JLabel("<html><body style='width: 300px; text-align: center;'>" +
-                "Select a flower to learn more!</body></html>");
-        infoLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        infoLabel = new JLabel("<html><div style='text-align:center; width:350px;'>Select a flower to learn more!</div></html>");
         infoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        infoLabel.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
+        infoLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
         leftPanel.add(infoLabel);
 
-        // Add Button
         addButton = new JButton("Add to Bouquet");
         addButton.setEnabled(false);
         addButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        addButton.setBackground(new Color(255, 215, 0));
         addButton.addActionListener(e -> addToBouquet());
         leftPanel.add(addButton);
 
+        clearButton = new JButton("Clear Bouquet");
+        clearButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        clearButton.addActionListener(e -> {
+            bouquetFlowers.clear();
+            bouquetPanel.repaint();
+        });
+
+        leftPanel.add(Box.createRigidArea(new Dimension(0, 10)));
+        leftPanel.add(clearButton);
+
         add(leftPanel, BorderLayout.WEST);
 
-        // --- RIGHT PANEL: Selection Buttons ---
+        bouquetPanel = new BouquetPanel(bouquetFlowers);
+        add(bouquetPanel, BorderLayout.CENTER);
+
         rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
-        rightPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 20));
+        rightPanel.setBorder(BorderFactory.createEmptyBorder(20, 10, 10, 20));
+        rightPanel.setPreferredSize(new Dimension(240, 700));
 
         JLabel title = new JLabel("Pick Your Flowers:");
         title.setFont(new Font("Arial", Font.BOLD, 16));
@@ -73,64 +71,162 @@ public class FlowerBouquetGame extends JFrame {
 
         for (Flower f : flowers) {
             JButton btn = new JButton(f.name);
-            btn.setMaximumSize(new Dimension(200, 30));
+            btn.setMaximumSize(new Dimension(220, 32));
             btn.addActionListener(e -> displayFlower(f));
-            rightPanel.add(Box.createRigidArea(new Dimension(0, 5)));
+
+            rightPanel.add(Box.createRigidArea(new Dimension(0, 8)));
             rightPanel.add(btn);
         }
 
-        // Bouquet List
-        rightPanel.add(Box.createRigidArea(new Dimension(0, 20)));
-        rightPanel.add(new JLabel("Your Bouquet:"));
-        bouquetModel = new DefaultListModel<>();
-        bouquetList = new JList<>(bouquetModel);
-        rightPanel.add(new JScrollPane(bouquetList));
-
-        add(rightPanel, BorderLayout.CENTER);
+        add(rightPanel, BorderLayout.EAST);
     }
 
     private void loadFlowerData() {
         try {
             File file = new File("flower.txt");
             Scanner scanner = new Scanner(file);
+
             while (scanner.hasNextLine()) {
                 String name = scanner.nextLine().trim();
-                if (name.isEmpty()) continue;
+
+                if (name.isEmpty()) {
+                    continue;
+                }
+
                 String desc = scanner.nextLine().trim();
-                String imgPath = scanner.nextLine().trim();
-                flowers.add(new Flower(name, desc, imgPath));
+                String normalImage = scanner.nextLine().trim();
+                String bouquetImage = getBouquetImageName(normalImage);
+
+                flowers.add(new Flower(name, desc, normalImage, bouquetImage));
             }
+
             scanner.close();
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading flower.txt");
         }
     }
 
+    private String getBouquetImageName(String normalImage) {
+        if (normalImage.equals("poppy.jpeg")) {
+            return "poppy-removebg-preview.png";
+        } else if (normalImage.equals("yarrow.jpeg")) {
+            return "yarrow-removebg-preview.png";
+        } else if (normalImage.equals("sunflower.jpeg")) {
+            return "sunflower-removebg-preview.png";
+        } else if (normalImage.equals("blueFlax.jpeg")) {
+            return "blueFlax-removebg-preview.png";
+        } else if (normalImage.equals("chuparosa.jpeg") || normalImage.equals("chaparosa.jpeg")) {
+            return "chaparosa-removebg-preview.png";
+        } else if (normalImage.equals("arroyoLupine.jpeg")) {
+            return "arroyoLupine-removebg-preview.png";
+        } else if (normalImage.equals("winecupClarkia.jpeg") || normalImage.equals("winecupClarika.jpeg")) {
+            return "winecupClarika-removebg-preview.png";
+        }
+
+        return normalImage;
+    }
+
     private void displayFlower(Flower f) {
         selectedFlower = f;
-        infoLabel.setText("<html><div style='text-align: center;'><b>" + f.name + "</b><br><br>" + f.description + "</div></html>");
+
+        infoLabel.setText("<html><div style='text-align:center; width:350px;'>" +
+                "<b>" + f.name + "</b><br><br>" + f.description +
+                "</div></html>");
+
+        ImageIcon icon = new ImageIcon(f.normalImagePath);
+
+        if (icon.getIconWidth() > 0) {
+            Image img = icon.getImage().getScaledInstance(230, 230, Image.SCALE_SMOOTH);
+            flowerImageLabel.setIcon(new ImageIcon(img));
+            flowerImageLabel.setText("");
+        } else {
+            flowerImageLabel.setIcon(null);
+            flowerImageLabel.setText("[ Missing: " + f.normalImagePath + " ]");
+        }
+
         addButton.setEnabled(true);
     }
 
     private void addToBouquet() {
-        if (selectedFlower != null) {
-            bouquetModel.addElement(selectedFlower.name);
+        if (selectedFlower != null && !bouquetFlowers.contains(selectedFlower)) {
+            bouquetFlowers.add(selectedFlower);
+            bouquetPanel.repaint();
         }
     }
 
-    // Helper class to store flower info
     static class Flower {
-        String name, description, imagePath;
-        Flower(String n, String d, String i) {
-            this.name = n;
-            this.description = d;
-            this.imagePath = i;
+        String name;
+        String description;
+        String normalImagePath;
+        String bouquetImagePath;
+
+        Flower(String n, String d, String normalImg, String bouquetImg) {
+            name = n;
+            description = d;
+            normalImagePath = normalImg;
+            bouquetImagePath = bouquetImg;
+        }
+    }
+
+    static class BouquetPanel extends JPanel {
+        private ArrayList<Flower> bouquetFlowers;
+        private Image bouquetCover;
+
+        public BouquetPanel(ArrayList<Flower> bouquetFlowers) {
+            this.bouquetFlowers = bouquetFlowers;
+            bouquetCover = new ImageIcon("bouquetCover.jpeg").getImage();
+
+            setBackground(Color.WHITE);
+            setBorder(BorderFactory.createTitledBorder("Your Bouquet"));
+        }
+
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+
+            Graphics2D g2 = (Graphics2D) g;
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+
+            int panelW = getWidth();
+            int centerX = panelW / 2;
+
+            int coverW = 360;
+            int coverH = 450;
+            int coverX = centerX - coverW / 2;
+            int coverY = 130;
+
+            g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
+
+            int flowerSize = 200;
+            int n = bouquetFlowers.size();
+
+            int spacing = 70;
+            int startX = centerX - (n - 1) * spacing / 2;
+            int baseY = coverY + 40;
+
+            for (int i = 0; i < n; i++) {
+                Flower f = bouquetFlowers.get(i);
+                ImageIcon icon = new ImageIcon(f.bouquetImagePath);
+
+                if (icon.getIconWidth() > 0) {
+                    int x = startX + i * spacing - flowerSize / 2;
+                    int y = baseY + (int) (Math.sin(i * 0.8) * 25);
+
+                    g2.drawImage(icon.getImage(), x, y, flowerSize, flowerSize, this);
+                } else {
+                    g2.setColor(Color.RED);
+                    g2.drawString("Missing: " + f.bouquetImagePath, 20, 70 + i * 20);
+                }
+            }
+
+            g2.setFont(new Font("Arial", Font.BOLD, 18));
+            g2.setColor(Color.BLACK);
+            g2.drawString("Selected Flowers: " + n, 20, 35);
         }
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            new FlowerBouquetGame().setVisible(true);
-        });
+        SwingUtilities.invokeLater(() -> new FlowerBouquetGame().setVisible(true));
     }
 }
