@@ -191,33 +191,54 @@ public class FlowerBouquetGame extends JFrame {
             int panelW = getWidth();
             int centerX = panelW / 2;
 
-            int coverW = 280;
-            int coverH = 350;
+            int coverW = 320;
+            int coverH = 400;
             int coverX = centerX - coverW / 2;
-            int coverY = 130;
+            int coverY = 135;
 
+            int flowerSize = 170;
+
+            int[][] spots = {
+                    {centerX - 145, coverY + 20},
+                    {centerX - 80,  coverY - 10},
+                    {centerX - 15,  coverY + 10},
+                    {centerX + 55,  coverY - 5},
+                    {centerX - 110, coverY + 75},
+                    {centerX - 45,  coverY + 60},
+                    {centerX + 20,  coverY + 75}
+            };
+
+            double[] angles = {
+                    -0.35, -0.18, -0.05, 0.20, -0.25, 0.08, 0.25
+            };
+
+         
             g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
 
-            int flowerSize = 200;
-            int centerY = coverY + 40;
-
-            for (int i = 0; i < bouquetFlowers.size(); i++) {
+           
+            for (int i = 0; i < bouquetFlowers.size() && i < spots.length; i++) {
                 Flower f = bouquetFlowers.get(i);
                 ImageIcon icon = new ImageIcon(f.bouquetImagePath);
 
                 if (icon.getIconWidth() > 0) {
-                    int offsetX = (int)(Math.random() * 40 - 20);
-                    int offsetY = (int)(Math.random() * 40 - 20);
+                    int x = spots[i][0];
+                    int y = spots[i][1];
 
-                    int x = centerX - flowerSize / 2 + offsetX;
-                    int y = centerY + offsetY;
-
-                    g2.drawImage(icon.getImage(), x, y, flowerSize, flowerSize, this);
+                    Graphics2D copy = (Graphics2D) g2.create();
+                    copy.rotate(angles[i], x + flowerSize / 2, y + flowerSize / 2);
+                    copy.drawImage(icon.getImage(), x, y, flowerSize, flowerSize, this);
+                    copy.dispose();
                 } else {
                     g2.setColor(Color.RED);
                     g2.drawString("Missing: " + f.bouquetImagePath, 20, 70 + i * 20);
                 }
             }
+
+           
+            Shape oldClip = g2.getClip();
+            g2.setClip(coverX, coverY + 205, coverW, coverH - 205);
+            g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
+            g2.setClip(oldClip);
 
             g2.setFont(new Font("Arial", Font.BOLD, 18));
             g2.setColor(Color.BLACK);
