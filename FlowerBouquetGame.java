@@ -191,8 +191,8 @@ public class FlowerBouquetGame extends JFrame {
             int panelW = getWidth();
             int centerX = panelW / 2;
 
-            int coverW = 360;
-            int coverH = 450;
+            int coverW = 280;
+            int coverH = 350;
             int coverX = centerX - coverW / 2;
             int coverY = 130;
 
