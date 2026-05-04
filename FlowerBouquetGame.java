@@ -199,19 +199,18 @@ public class FlowerBouquetGame extends JFrame {
             g2.drawImage(bouquetCover, coverX, coverY, coverW, coverH, this);
 
             int flowerSize = 200;
-            int n = bouquetFlowers.size();
+            int centerY = coverY + 40;
 
-            int spacing = 70;
-            int startX = centerX - (n - 1) * spacing / 2;
-            int baseY = coverY + 40;
-
-            for (int i = 0; i < n; i++) {
+            for (int i = 0; i < bouquetFlowers.size(); i++) {
                 Flower f = bouquetFlowers.get(i);
                 ImageIcon icon = new ImageIcon(f.bouquetImagePath);
 
                 if (icon.getIconWidth() > 0) {
-                    int x = startX + i * spacing - flowerSize / 2;
-                    int y = baseY + (int) (Math.sin(i * 0.8) * 25);
+                    int offsetX = (int)(Math.random() * 40 - 20);
+                    int offsetY = (int)(Math.random() * 40 - 20);
+
+                    int x = centerX - flowerSize / 2 + offsetX;
+                    int y = centerY + offsetY;
 
                     g2.drawImage(icon.getImage(), x, y, flowerSize, flowerSize, this);
                 } else {
@@ -222,7 +221,7 @@ public class FlowerBouquetGame extends JFrame {
 
             g2.setFont(new Font("Arial", Font.BOLD, 18));
             g2.setColor(Color.BLACK);
-            g2.drawString("Selected Flowers: " + n, 20, 35);
+            g2.drawString("Selected Flowers: " + bouquetFlowers.size(), 20, 35);
         }
     }
 
