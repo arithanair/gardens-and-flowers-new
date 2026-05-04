@@ -183,8 +183,8 @@ public class FlowerBouquetGame extends JFrame {
             int panelW = getWidth();
             int centerX = panelW / 2;
 
-            int coverW = 396;
-            int coverH = 492;
+            int coverW = 330;
+            int coverH = 410;
             int coverX = centerX - coverW / 2;
             int coverY = 125;
 
@@ -212,7 +212,7 @@ public class FlowerBouquetGame extends JFrame {
     y = coverY + 50;
     angle = 0.05;
 } else if (f.name.equals("Arroyo Lupine")) {
-    x = centerX - 20;
+    x = centerX - 100;
     y = coverY + 45;
     angle = 0.12;
 } else if (f.name.equals("Blue Flax")) {
@@ -224,12 +224,12 @@ public class FlowerBouquetGame extends JFrame {
     y = coverY - 10;
     angle = 0.08;
 } else if (f.name.equals("Yarrow")) {
-    x = centerX - 130;
+    x = centerX - 100;
     y = coverY + 55;
     angle = 0.15;
 } else if (f.name.equals("Chuparosa")) {
-    x = centerX - 10;
-    y = coverY + 20;
+    x = centerX - 100;
+    y = coverY + 15;
     angle = 0.15;
 }
 
